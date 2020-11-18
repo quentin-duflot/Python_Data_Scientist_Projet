@@ -166,10 +166,67 @@ def candlestick(ticker, start, end):
 # In[10]
 
 candlestick('BNP.PA', start, end)
+
+# # Représentation des données brutes
+
+# In[11]
+
+stocks = pd.DataFrame({"MC.PA": data_cac40["lvmh"]["Adj Close"],
+                       "GLE.PA": data_cac40["societegenerale"]["Adj Close"],
+                       })
+stocks.head()
+
+# In[12]
+
+stocks.plot(grid = True)
+
+# In[13]
+
+stocks.plot(secondary_y = ["GLE.PA"], grid = True)
+
+# In[14]
+
+stock_return = stocks.apply(lambda x: np.log(x/x.shift(1)))
+stock_return.loc['2020-03-01':].plot(grid = True).axhline(y = 0, color = "black", lw = 2)
+
+# In[15]
+
+def bollinger_bands(name, start, end):
+    df = pdr.DataReader(name, 'yahoo', start, end)
+   
+    # On calcule la moyenne mobile 20, l'écart-type pour en déduire les bandes supérieures et inférieures
+    df['20 Day MA'] = df['Adj Close'].rolling(window=20).mean()
+    
+    df['20 Day STD'] = df['Adj Close'].rolling(window=20).std() 
+    df['Upper Band'] = df['20 Day MA'] + (df['20 Day STD'] * 2)
+    df['Lower Band'] = df['20 Day MA'] - (df['20 Day STD'] * 2)
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    x_axis = df.index.get_level_values(0)
+    
+    # On remplit l'espace séparant les bandes supérieures et inférieures des bandes de Bollinger
+    ax.fill_between(x_axis, df['Upper Band'], df['Lower Band'], color='grey')
+    
+    # On trace les prix ajustés de fermture et la moyenne mobile 20
+    ax.plot(x_axis, df['Adj Close'], color='blue', lw=2)
+    ax.plot(x_axis, df['20 Day MA'], color='r', lw=2)
+    
+    # Titre et présentation du graphe
+    ax.set_title('20 Day Bollinger Band For {}'.format(name))
+    ax.set_xlabel('Date (Year/Month)')
+    ax.set_ylabel('Price(USD)')
+    plt.grid(True)
+    ax.legend() 
+    
+# In[16]
+
+bollinger_bands('AAPL',start, end)
     
 # # Problem du Stock Split et Dividendes
 
-# In[11]:
+# In[17]:
 
 
 def ohlc_adj(dat):
@@ -191,14 +248,14 @@ def ohlc_adj(dat):
 
 # ## Calcul des moyennes mobiles
 
-# In[12]:
+# In[18]:
 
 
 lvmh_adj = ohlc_adj(data_cac40["lvmh"])
 lvmh_adj.head()
 
 
-# In[13]:
+# In[19]:
 
 
 lvmh_adj["20d"] = lvmh_adj["Close"].rolling(window = 20, center = False).mean()
@@ -209,7 +266,7 @@ lvmh_adj.dropna(inplace=True)
 
 # # Trend Following Strategy
 
-# In[14]:
+# In[20]:
 
 
 lvmh_adj['20d-50d'] = lvmh_adj['20d'] - lvmh_adj['50d']
@@ -220,7 +277,7 @@ lvmh_adj["Regime"] = np.where(lvmh_adj['20d-50d'] < 0, -1, lvmh_adj["Regime"])
 lvmh_adj["Regime"].value_counts()
 
 
-# In[15]:
+# In[21]:
 
 
 lvmh_adj["Regime"][-1] = 0
@@ -229,7 +286,7 @@ lvmh_adj.dropna(inplace=True)
 lvmh_adj['Signal'].plot(figsize=(9,4))
 
 
-# In[16]:
+# In[22]:
 
 
 # on créé un tableau avec les opérations qui sont faites
@@ -249,7 +306,7 @@ if lvmh_adj_signals["Signal"][0] == "Sell" :
 lvmh_adj_signals.head()
 
 
-# In[17]:
+# In[23]:
 
 
 lvmh_adj_long_profits = pd.DataFrame({
@@ -267,13 +324,12 @@ lvmh_adj_long_profits = pd.DataFrame({
 lvmh_adj_long_profits.head()
 
 
-# In[18]:
+# In[24]:
 
 
 lvmh_adj_long_profits['Profit'].sum()
 
-
-# In[19]:
+# In[25]:
 
 
 tradeperiods = pd.DataFrame({"Start": lvmh_adj_long_profits.index,
@@ -284,7 +340,7 @@ lvmh_adj_long_profits["Low"] = tradeperiods.apply(lambda x: np.min(lvmh_adj.loc[
 lvmh_adj_long_profits.head()
 
 
-# In[20]:
+# In[26]:
 
 
 
