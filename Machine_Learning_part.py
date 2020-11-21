@@ -22,7 +22,6 @@ from random import uniform
 #Calculer des signaux d'achat entre start et end que l'on juge corrects pour servir de modèle pour un futur algorithme de trading : Préparation Feature Y
 
 
-
 def training_set(data, results, start, end, alpha=0.0):
     """
     Acheter : 2 ; Conserver : 1 ; Vendre : 0
@@ -37,3 +36,29 @@ def training_set(data, results, start, end, alpha=0.0):
         except KeyError: #erreur si start n'est pas un jour ouvré
             pass
         return results
+t = []
+    for index, row in data[end-7*d:end].iterrows():
+        t.append(index)
+    end_0 = t[-1]   # correspond à la dernière date du tableau
+    end_1 = t[-2]   # avant dernière date 
+    end_2 = t[-3]   # avant avant dernière date 
+    
+    i_m = data.loc[end_2:end_0,"Close"].idxmin()
+    i_M = data.loc[end_2:end_0,"Close"].idxmax()
+    m = data.loc[i_m, "Close"]
+    M = data.loc[i_M, "Close"]
+    if abs(m-M)>alpha*m : #condition de profit
+        if (i_m== end_2 and i_M == end_0) or (i_m== end_0 and i_M == end_2) :
+            results.loc[end_2:end_0,"Signal"] = 1  #on conserve car monotone sur l'intervalle de taille 3
+            return  training_set(data, results, start, end_1)
+
+        elif i_m == end_1: #le minimum est le point du milieu , inversion de tendance
+            results.loc[i_m,"Signal"] = 2 
+            return  training_set(data, results, start, end_1)
+        elif i_M == end_1: 
+            results.loc[i_M,"Signal"] = 0 
+            return  training_set(data, results, start, end_1)
+  
+    else :  # pas de profit ici
+        results.loc[end_2:end_0,"Signal"] = 1 #on conserve car pas de profit réalisable
+        return  training_set(data, results, start, end_1)
