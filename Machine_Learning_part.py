@@ -68,6 +68,25 @@ t = []
 
 #Pas assez de données sur les valeurs Achat/Vente par rapport au nombre de données sur la valeur Conserver. On fait de la Data Augmentation pour avoir les valeurs en nombre similaire.
 
+def data_augmentation(df,n=3,p=0.01):
+    
+  res = df.copy()
+  d = pd.Timedelta('1 day')
+  i=0
+  for index, row in df.iterrows():
+      if row["Signal"]==0 or row["Signal"]==2:
+          for j in range(n):
+              res = pd.concat([res, pd.DataFrame({"MACD" : row[0]*(1+uniform(-p,p)),
+                                        "RSI" : row[1]*(1+uniform(-p,p)),
+                                        "STO_K" : row[2]*(1+uniform(-p,p)),
+                                        "D" : row[3]*(1+uniform(-p,p)),
+                                        "20d-50d" :row[4]*(1+uniform(-p,p)),
+                                        "momentum" : row[5]*(1+uniform(-p,p)),
+                                        "Signal" : row["Signal"]
+                                        },index = [end + i*d])])
+          i+=n
+  return res
+
 ### Préparation Feature X
 
 #On télécharge et prépare les features X, en séparant les données. Une partie pour l'entrainement (70%) et l'autre pour le test (30%)
