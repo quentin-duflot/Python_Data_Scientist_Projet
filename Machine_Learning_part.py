@@ -95,7 +95,9 @@ def prepare(df,start=start, end = end,N=14):
                     "20d-50d" : df["20d-50d"],
                     "momentum" : df["momentum"],
                     "Signal" : results["Signal"]
-                    })
+                    })[50:] 
+    #on ne prend pas les 50 premières lignes car la colonne "20d-50d" contient NaN : pas applicable avec Random Forest
+    
     
     
     return (data)
