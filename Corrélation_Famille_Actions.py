@@ -45,3 +45,23 @@ for num_ligne in range(0,S):
       family[num_ligne].append(liste_actions[num_colonne])
       mat_corr.drop([liste_actions[num_colonne]], axis = 'columns', inplace = True)
       del liste_index[num_colonne]
+
+
+
+family2 = []
+for k in range(41):
+  if family[k] != []:
+    family2.append(family[k])
+    
+    
+    
+end2 = datetime.datetime(2018,10,31)
+data = {k:[] for k in range(len(family2))}
+X = {k:k for k in range(len(family2))}
+Y = {k:k for k in range(len(family2))}
+
+for i in range(len(family2)):
+  data[i] = pd.concat([prepare(data_cac40[family2[i][j]] , end=end2) for j in range(len(family2[i]))])
+  data[i] = data_augmentation(data[i])
+  X[i] = data[i][['MACD', 'RSI', 'STO_K', 'D', '20d-50d']]
+  Y[i] = data[i]["Signal"]
