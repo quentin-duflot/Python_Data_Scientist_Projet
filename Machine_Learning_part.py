@@ -146,6 +146,8 @@ end2 = datetime.datetime(2018,10,31)
 axa = pdr.get_data_yahoo('FP.PA',start=start, end=end2)
 data = prepare(axa,end=end2)
 
+# ici on applique la fonction data_augmentation(data)
+data2 = data_augmentation(data)
 
 X = data2[['MACD', 'RSI', 'STO_K', 'D', '20d-50d','momentum']]
 Y = data2["Signal"]
