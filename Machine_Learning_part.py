@@ -26,6 +26,7 @@ def training_set(data, results, start, end, alpha=0.0):
     """
     Acheter : 2 ; Conserver : 1 ; Vendre : 0
     """
+    
     d = pd.Timedelta('1 day')
     if len(results[start:end]) < 4:
         try:
@@ -71,6 +72,13 @@ t = []
 
 
 def prepare(df,start=start, end = end,N=14):
+    """
+    Permet de généraliser la préparation des données à n'importe quelle action, entrée en paramètre. 
+
+    :param df: data brute téléchargée depuis Yahoo 
+
+    :return: DataFrame avec les features X et Y(colonne "Signal")
+    """
     
     df = ohlc_adj(df[start:end]) #Cours ajusté
 
