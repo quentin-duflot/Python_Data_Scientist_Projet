@@ -22,16 +22,20 @@ mat_corr = stocks_cac40.corr().copy()
 mat_corr_immu = stocks_cac40.corr().copy()
 
 
+# liste qui contiendra les différentes familles
 family = [[] for k in range(41)]
 
 
+# On crée une liste avec le nom des actiosn pour relier un indice à un nom d'action
 liste_actions = []
 for corr in mat_corr:
   liste_actions.append(corr)
 liste_actions
 
-
+# Compteur pour n'avoir qu'une famille par action
 S = 41
+
+# Dictionnaire des indices de la matrice de corrélation immuable qu'on videra au fur et à mesure qu'une action sera choisie  (une liste verrait ses indices modifiés)
 
 liste_index = {k:k for k in range(0,S)}
 
@@ -47,6 +51,7 @@ for num_ligne in range(0,S):
       del liste_index[num_colonne]
 
 
+# Extraction des familles sous forme de DataFrame
 
 family2 = []
 for k in range(41):
