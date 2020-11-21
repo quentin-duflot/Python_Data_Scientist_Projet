@@ -68,5 +68,23 @@ Y = {k:k for k in range(len(family2))}
 for i in range(len(family2)):
   data[i] = pd.concat([prepare(data_cac40[family2[i][j]] , end=end2) for j in range(len(family2[i]))])
   data[i] = data_augmentation(data[i])
-  X[i] = data[i][['MACD', 'RSI', 'STO_K', 'D', '20d-50d']]
+  X[i] = data[i][['MACD', 'RSI', 'STO_K', 'D', '20d-50d', 'momentum']]
   Y[i] = data[i]["Signal"]
+
+
+#Séparation des données en données d'entrainement(70%) et de données de test(30%) 
+donnee_test = []
+cac2 = cac.copy()
+for i in range(len(family2)):
+  donnee_test.append(train_test_split(X[i], Y[i], test_size=0.3))
+
+#Création de la fonction avec Random Forest, une par famille
+foret_alea = [] #fonction de la famille i à l'indice i
+y_pred = []
+for i in range(len(family2)):
+  clf=RandomForestClassifier(min_samples_leaf = 1, min_samples_split = 2, n_estimators=1500) # n : nombre d'arbres
+  clf.fit(donnee_test[i][0],donnee_test[i][2])
+  y_pred.append(clf.predict(donnee_test[i][1]))
+  # on met à jour le classifier pour les actions correspondantes
+  for act in family2[i]:
+    cac2[act] = clf
