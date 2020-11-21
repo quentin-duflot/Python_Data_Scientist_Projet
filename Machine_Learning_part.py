@@ -65,3 +65,7 @@ t = []
         
 
 
+### Préparation Feature X
+
+#On télécharge et prépare les features X, en séparant les données. Une partie pour l'entrainement (70%) et l'autre pour le test (30%)
+
