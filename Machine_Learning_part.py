@@ -69,3 +69,34 @@ t = []
 
 #On télécharge et prépare les features X, en séparant les données. Une partie pour l'entrainement (70%) et l'autre pour le test (30%)
 
+
+def prepare(df,start=start, end = end,N=14):
+    
+    df = ohlc_adj(df[start:end]) #Cours ajusté
+
+    df["20d"] = np.round(df["Close"].rolling(window = 20, center = False).mean(), 2)
+    df["50d"] = np.round(df["Close"].rolling(window = 50, center = False).mean(), 2) 
+    df["20d-50d"] = df["20d"] - df["50d"]                                             
+    df = calcul_MACD(df)
+    df["e9"] = pd.Series.ewm(df['MACD'], span=12).mean()
+
+    df["K"] = 100 *(df["Close"]-df["Low"].rolling(window = N).min())/(df["High"].rolling(window = N).max()- df["Low"].rolling(window = N).min())
+    df["D"] = df["K"].rolling(window=3).mean()
+    df["momentum"] = df["Close"] - df["Close"].shift(12)
+
+    results = pd.DataFrame({"Price" : df["Close"].copy(),
+                          "Signal" : 1})
+    results = training_set(df,results,start,end,0) 
+
+    data = pd.DataFrame({"MACD" : df["MACD"]-df["e9"],
+                    "RSI" : RSI_mobile(df, N),
+                    "STO_K" : df["K"],
+                    "D" : df["D"],
+                    "20d-50d" : df["20d-50d"],
+                    "momentum" : df["momentum"],
+                    "Signal" : results["Signal"]
+                    })
+    
+    
+    return (data)
+
