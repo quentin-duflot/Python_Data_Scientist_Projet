@@ -15,3 +15,25 @@ from sklearn import metrics
 import seaborn as sns
 import sys
 from random import uniform
+
+
+### 1) Préparation Feature Y 
+
+#Calculer des signaux d'achat entre start et end que l'on juge corrects pour servir de modèle pour un futur algorithme de trading : Préparation Feature Y
+
+
+
+def training_set(data, results, start, end, alpha=0.0):
+    """
+    Acheter : 2 ; Conserver : 1 ; Vendre : 0
+    """
+    d = pd.Timedelta('1 day')
+    if len(results[start:end]) < 4:
+        try:
+            if data.loc[end, "Close"] > data.loc[start, "Close"]:
+                results.loc[start, "Signal"]= 2
+            else :
+                results.loc[end, "Signal"]= 2
+        except KeyError: #erreur si start n'est pas un jour ouvré
+            pass
+        return results
