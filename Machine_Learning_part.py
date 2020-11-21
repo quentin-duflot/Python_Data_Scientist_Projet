@@ -107,3 +107,28 @@ data = prepare(axa,end=end2)
 
 X = data2[['MACD', 'RSI', 'STO_K', 'D', '20d-50d','momentum']]
 Y = data2["Signal"]
+
+### Application du Random Forest
+
+
+#Séparation des données en données d'entrainement(70%) et de données de test(30%) 
+
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
+
+#Création de la fonction avec Random Forest
+
+clf=RandomForestClassifier(min_samples_leaf = 1, min_samples_split = 2, n_estimators=1500) # n : nombre d'arbres
+
+clf.fit(X_train,y_train)
+
+y_pred=clf.predict(X_test)
+
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+
+
+
+
+
+
+
+
