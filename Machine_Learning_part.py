@@ -64,7 +64,9 @@ t = []
         results.loc[end_2:end_0,"Signal"] = 1 #on conserve car pas de profit réalisable
         return  training_set(data, results, start, end_1)
         
+### Data Augmentation
 
+#Pas assez de données sur les valeurs Achat/Vente par rapport au nombre de données sur la valeur Conserver. On fait de la Data Augmentation pour avoir les valeurs en nombre similaire.
 
 ### Préparation Feature X
 
