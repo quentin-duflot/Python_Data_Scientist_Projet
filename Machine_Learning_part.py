@@ -98,7 +98,12 @@ def prepare(df,start=start, end = end,N=14):
                     })[50:] 
     #on ne prend pas les 50 premières lignes car la colonne "20d-50d" contient NaN : pas applicable avec Random Forest
     
-    
-    
     return (data)
 
+end2 = datetime.datetime(2018,10,31)
+axa = pdr.get_data_yahoo('FP.PA',start=start, end=end2)
+data = prepare(axa,end=end2)
+
+
+X = data2[['MACD', 'RSI', 'STO_K', 'D', '20d-50d','momentum']]
+Y = data2["Signal"]
