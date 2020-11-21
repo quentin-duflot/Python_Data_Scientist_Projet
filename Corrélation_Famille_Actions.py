@@ -58,8 +58,7 @@ for k in range(41):
   if family[k] != []:
     family2.append(family[k])
     
-    
-    
+
 end2 = datetime.datetime(2018,10,31)
 data = {k:[] for k in range(len(family2))}
 X = {k:k for k in range(len(family2))}
@@ -71,6 +70,7 @@ for i in range(len(family2)):
   X[i] = data[i][['MACD', 'RSI', 'STO_K', 'D', '20d-50d', 'momentum']]
   Y[i] = data[i]["Signal"]
 
+### Construction d'un clf par famille 
 
 #Séparation des données en données d'entrainement(70%) et de données de test(30%) 
 donnee_test = []
@@ -88,3 +88,30 @@ for i in range(len(family2)):
   # on met à jour le classifier pour les actions correspondantes
   for act in family2[i]:
     cac2[act] = clf
+    
+
+
+
+
+
+
+# Exemple pour la famille 1 (indice 0)
+
+print("Accuracy:",metrics.accuracy_score(donnee_test[0][3], y_pred[0]))
+
+feature_imp = pd.Series(cac['lvmh'].feature_importances_, index = ["MACD",'RSI', 'STO_K', "D", '20d-50d', 'momentum']).sort_values(ascending=False)
+
+#Matrice de confusion 
+
+m = metrics.confusion_matrix(donnee_test[0][3], y_pred[0])
+print("Matrice de Confusion : \n",m)
+#Ligne : y_test   ; Colonne : y_pred
+
+# Mesure l'importance des features avec un histogramme
+sns.barplot(x=feature_imp, y=feature_imp.index)
+
+plt.xlabel("Scores de l'importance des features dans dans notre modèle")
+plt.ylabel('Features')
+plt.title("Visualisation de l'importance des features pour la famille 1", fontsize=30)
+plt.legend()
+plt.show()
