@@ -169,14 +169,12 @@ y_pred=clf.predict(X_test)
 
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
-
-
 feature_imp = pd.Series(clf.feature_importances_, index = ["MACD",'RSI', 'STO_K', "D", '20d-50d','momentum']).sort_values(ascending=False)
 
 #Matrice de confusion 
 
-m = metrics.confusion_matrix(y_test,y_pred)
-print("Matrice de Confusion : \n",m)
+metrics.plot_confusion_matrix(clf, X_test, y_test)
+
 #Ligne : y_test   ; Colonne : y_pred
 
 # Mesure l'importance des features avec un histogramme
