@@ -40,6 +40,7 @@ symbol_cac40={"lvmh":'MC.PA', "danone": 'BN.PA',"thales": 'HO.PA',"airbus": 'AIR
 
 name_cac40 = ["lvmh", "danone","thales","airbus","total","veolia","societegenerale","vinci","peugeot","capgemini","axa","safran","Airliquide",              "carrefour","orange","accor","bouygues","worldline","kering","engie","BNP","creditagricole","sanofi","pernodricard",              "schneiderelectric","l_oreal","michelin","vivendi","atos","sodexo","legrand","saintgobain","arcelormittal","dassault",              "essilorluxottica","hermes","publicis","technipfmc","unibail","renault","stmicroelectronics"]
 
+cac40 = pdr.get_data_yahoo("^FCHI", start, end)
 data_cac40 = {}
 
 for x in name_cac40 : 
