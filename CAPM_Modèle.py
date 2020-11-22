@@ -31,7 +31,6 @@ def capm(df1, df2, start, end):
     """
 
     stock1 = df1[start:end]
-
     stock2 = df2[start:end]
 
     #On garde les lignes à une période d'un mois
