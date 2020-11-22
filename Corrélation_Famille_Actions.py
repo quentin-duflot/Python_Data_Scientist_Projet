@@ -77,6 +77,9 @@ donnee_test = []
 cac2 = cac.copy()
 for i in range(len(family2)):
   donnee_test.append(train_test_split(X[i], Y[i], test_size=0.3))
+  
+#donnee_test : 1er indice i : famille i
+# 2ème indice j : 0 : X_train ; 1 : X_test ; 2 : Y_train ; 3 : Y_test
 
 #Création de la fonction avec Random Forest, une par famille
 foret_alea = [] #fonction de la famille i à l'indice i
@@ -92,9 +95,6 @@ for i in range(len(family2)):
 
 
 
-
-
-
 # Exemple pour la famille 1 (indice 0)
 
 print("Accuracy:",metrics.accuracy_score(donnee_test[0][3], y_pred[0]))
@@ -103,8 +103,7 @@ feature_imp = pd.Series(cac['lvmh'].feature_importances_, index = ["MACD",'RSI',
 
 #Matrice de confusion 
 
-m = metrics.confusion_matrix(donnee_test[0][3], y_pred[0])
-print("Matrice de Confusion : \n",m)
+metrics.plot_confusion_matrix(foret_alea[0],donnee_test[0][1], donnee_test[0][3])
 #Ligne : y_test   ; Colonne : y_pred
 
 # Mesure l'importance des features avec un histogramme
