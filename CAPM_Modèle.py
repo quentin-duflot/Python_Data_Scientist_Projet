@@ -13,6 +13,22 @@ lvmh = pdr.get_data_yahoo("MC.PA", start, end)
 cac40 = pdr.get_data_yahoo("^FCHI", start, end) #marché sur lequel se trouve lvmh : cac40
 
 def capm(df1, df2, start, end):
+    """
+    :param df1: pandas DataFrame de données brutes issues de Yahoo ("Open", "High", "Low", "Close", and "Adj Close")
+    :param df2: pandas DataFrame de données brutes issues de Yahoo ("Open", "High", "Low", "Close", and "Adj Close")
+    :param start: str de la première date de la période
+    :param end: str de la dernière date de la période
+    
+    :return: beta, CAPM
+    
+    Calcule le beta et le CAPM sur une période, à la date end. 
+    CAPM = r_f + beta * (market_return - r_f)
+    
+    r_f : taux d'un placement sans risque : livret A en France
+    market_retun : rentabilité esperée du marché : rentabilité historique 
+    beta : beta de l'actif financier df1
+
+    """
 
     stock1 = df1[start:end]
 
@@ -31,6 +47,6 @@ def capm(df1, df2, start, end):
     covmat = np.cov(data["s_returns"], data["m_returns"])
     beta = covmat[0,1]/covmat[1,1]
 
-    return risk_free_return + beta*(data["m_returns"].mean()*12-risk_free_return)
+    return beta,risk_free_return + beta*(data["m_returns"].mean()*12-risk_free_return)
 
 capm(lvmh, cac40, "01 01 2016", "14 10 2019")
