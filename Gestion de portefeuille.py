@@ -343,6 +343,30 @@ lvmh_adj_long_profits.head()
 
 # In[26]:
 
+# Statégie RSI
+
+def RSI_mobile(stock, time):
+  """ Calcul du RSI en utilisant des moyennes mobiles"""
+  # On va moyenner sur les valeurs à la fermeture
+  close = stock['Close']
+  # Calcul de la différence avec la marche précédente
+  delta = close.diff()  
+  # On ne conserve que les time dernières lignes, sur lesquelles on veut calculer le RSI
+  delta = delta[1:]
+  # On veut une moyenne des hausses (H) et une moyenne des baisses (B)
+  up, down = delta.copy(), delta.copy() # On copie le DataFrame delta 2 fois dans les tables up et down
+  # On supprime les hausses de down et les baisses de up
+  up[up < 0] = 0 
+  down[down > 0] = 0 
+  # On calcule les moyennes arithmétiques respectives de up et down 
+  H = up.rolling(time,center = False).mean()
+  B = down.rolling(time, center = False).mean().abs()
+  rsi = 100-(100/(1+H/B))
+  return rsi
+
+# In[27]:
+    
+RSI_mobile(lvmh_adj[start:end], 14)
 
 
 
