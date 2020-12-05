@@ -7,10 +7,10 @@ Created on Mon Nov 23 15:41:45 2020
 N = 14
 
 lvmh_adj["K"] = 100 *(lvmh_adj["Close"]-lvmh_adj["Low"].rolling(window = N).min())/(lvmh_adj["High"].rolling(window = N).max()- lvmh_adj["Low"].rolling(window = N).min())
-lvmh_adj["D"] = lvmh_adj["K"].rolling(window=3).mean()
+lvmh_adj["D"] = lvmh_adj["K"].rolling(window=N).mean()
 
 stochastique = pd.DataFrame({"K" : lvmh_adj["K"],
-                            "D" : lvmh_adj["D"]})
+                             "D" : lvmh_adj["D"]})
 
 stochastique.loc['2019-10-02':end,:].plot().axhline(y = 20, color = "black", lw = 2)
 
