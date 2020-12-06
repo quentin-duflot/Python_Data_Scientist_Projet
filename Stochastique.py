@@ -12,7 +12,8 @@ lvmh_adj["D"] = lvmh_adj["K"].rolling(window=N).mean()
 stochastique = pd.DataFrame({"K" : lvmh_adj["K"],
                              "D" : lvmh_adj["D"]})
 
-stochastique.loc['2019-10-02':end,:].plot().axhline(y = 20, color = "black", lw = 2)
+stochastique.loc['2019-10-02':end,:].plot(grid=True).axhline(y = 20, color = "black", lw = 2)
+plt.axhline(y=80, color = 'black', lw = 2)
 
 lvmh_adj["K-80"] = lvmh_adj["K"] - 80
 lvmh_adj["K-50"] = lvmh_adj["K"] - 50
@@ -57,11 +58,11 @@ def ma_crossover_orders(stocks, bas,haut, N):
     trades = pd.DataFrame({"Price": [], "Regime": [], "Signal": []})
     for s in stocks:
         s[1]["K"] = 100 *(s[1]["Close"]-s[1]["Low"].rolling(window = N).min())/(s[1]["High"].rolling(window = N).max()- s[1]["Low"].rolling(window = N).min())
-        s[1]["D"] = s[1]["K"].rolling(window=3).mean()
+        s[1]["D"] = s[1]["K"].rolling(window=N).mean()
 
-        s[1]["K-"+str(haut)] = s[1]["K"] -haut
+        s[1]["K-"+str(haut)] = s[1]["K"] - haut
         s[1]["K-50"] = s[1]["K"] -50
-        s[1]["K-"+str(bas)] = s[1]["K"] -bas
+        s[1]["K-"+str(bas)] = s[1]["K"] - bas
         s[1]["K-D"] = s[1]["K"] - s[1]["D"]
 
         # on met 5 si K <20 et K traverse D à la hausse
