@@ -14,12 +14,15 @@ stochastique = pd.DataFrame({"K" : lvmh_adj["K"],
 
 stochastique.loc['2019-10-02':end,:].plot().axhline(y = 20, color = "black", lw = 2)
 
-#Note 0 : acheter et 5 : vendre
-
 lvmh_adj["K-80"] = lvmh_adj["K"] - 80
 lvmh_adj["K-50"] = lvmh_adj["K"] - 50
 lvmh_adj["K-20"] = lvmh_adj["K"] - 20
 lvmh_adj["K-D"] = lvmh_adj["K"] - lvmh_adj["D"]
+
+lvmh_adj.dropna(inplace=True)
+lvmh_adj.head()
+
+#Note 0 : acheter et 5 : vendre
 
 def test_tab_bool(t1,t2):
   t= t1.copy()
