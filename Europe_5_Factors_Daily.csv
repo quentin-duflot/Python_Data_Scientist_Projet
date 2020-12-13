@@ -1,10 +1,4 @@
-This file was created using the 202009 Bloomberg database.
-
-Missing data are indicated by -99.99.
-
-
-
-,Mkt-RF,SMB,HML,RMW,CMA,RF
+Date,Mkt-RF,SMB,HML,RMW,CMA,RF
 19900702    ,0.99    ,0.01   ,-0.53    ,0.41   ,-0.25    ,0.03
 19900703    ,0.33   ,-0.09   ,-0.03    ,0.05    ,0.27    ,0.03
 19900704    ,0.24    ,0.01   ,-0.14   ,-0.10    ,0.23    ,0.03
