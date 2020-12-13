@@ -72,7 +72,7 @@ def tab_capm(df, start,end,N):
   
   return np.array(res)[::-1]
    
-  
+
   
 
 
