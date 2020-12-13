@@ -114,7 +114,7 @@ def prepare(df,start=start, end = end,N=14):
 
     :return: DataFrame avec les features X et Y(colonne "Signal")
     """
-    
+    df1 = df.copy()
     df = ohlc_adj(df[start:end]) #Cours ajusté
 
     df["20d"] = np.round(df["Close"].rolling(window = 20, center = False).mean(), 2)
@@ -126,7 +126,7 @@ def prepare(df,start=start, end = end,N=14):
     df["K"] = 100 *(df["Close"]-df["Low"].rolling(window = N).min())/(df["High"].rolling(window = N).max()- df["Low"].rolling(window = N).min())
     df["D"] = df["K"].rolling(window=3).mean()
     df["momentum"] = df["Close"] - df["Close"].shift(12)
-    df["capm"] = tab_capm(df, start, end, 400)
+    df["capm"] = tab_capm(df1, start, end, 400)
 
     results = pd.DataFrame({"Price" : df["Close"].copy(),
                           "Signal" : 1})
