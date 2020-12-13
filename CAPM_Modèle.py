@@ -49,3 +49,35 @@ def capm(df1, df2, start, end):
     return beta,risk_free_return + beta*(data["m_returns"].mean()*12-risk_free_return)
 
 capm(lvmh, cac40, "01 01 2016", "14 10 2019")
+
+
+
+def tab_capm(df,start, end, N):
+    """retourne un tableau avec le capm calculé à partir du jour Start + Njours
+
+    """
+    d = pd.Timedelta('1 day')
+    if start == end :
+        return []
+    else : 
+        try :
+            return capm(df, cac40, start , start + N*d) + tab_capm(df,start+d,end,N)
+        except KeyError : 
+            pass
+        
+        return tab_capm(df,start+d,end,N)
+
+    
+    
+    
+    
+    
+    
+   
+   
+   
+  
+  
+
+
+    
