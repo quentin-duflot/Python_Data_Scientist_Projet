@@ -95,6 +95,7 @@ def data_augmentation(df,n=3,p=0.01):
                                         "D" : row[3]*(1+uniform(-p,p)),
                                         "20d-50d" :row[4]*(1+uniform(-p,p)),
                                         "momentum" : row[5]*(1+uniform(-p,p)),
+                                        "capm" : row[6]*(1+uniform(-p,p)),
                                         "Signal" : row["Signal"]
                                         },index = [end + i*d])])
           i+=n
@@ -125,6 +126,7 @@ def prepare(df,start=start, end = end,N=14):
     df["K"] = 100 *(df["Close"]-df["Low"].rolling(window = N).min())/(df["High"].rolling(window = N).max()- df["Low"].rolling(window = N).min())
     df["D"] = df["K"].rolling(window=3).mean()
     df["momentum"] = df["Close"] - df["Close"].shift(12)
+    df["capm"] = tab_capm(df, start, end, 400)
 
     results = pd.DataFrame({"Price" : df["Close"].copy(),
                           "Signal" : 1})
@@ -136,6 +138,7 @@ def prepare(df,start=start, end = end,N=14):
                     "D" : df["D"],
                     "20d-50d" : df["20d-50d"],
                     "momentum" : df["momentum"],
+                    "capm" : df["capm"],
                     "Signal" : results["Signal"]
                     })[50:] 
     #on ne prend pas les 50 premières lignes car la colonne "20d-50d" contient NaN : pas applicable avec Random Forest
@@ -149,7 +152,7 @@ data = prepare(axa,end=end2)
 # ici on applique la fonction data_augmentation(data)
 data2 = data_augmentation(data)
 
-X = data2[['MACD', 'RSI', 'STO_K', 'D', '20d-50d','momentum']]
+X = data2[['MACD', 'RSI', 'STO_K', 'D', '20d-50d','momentum','capm']]
 Y = data2["Signal"]
 
 ### Application du Random Forest
@@ -169,7 +172,7 @@ y_pred=clf.predict(X_test)
 
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
-feature_imp = pd.Series(clf.feature_importances_, index = ["MACD",'RSI', 'STO_K', "D", '20d-50d','momentum']).sort_values(ascending=False)
+feature_imp = pd.Series(clf.feature_importances_, index = ["MACD",'RSI', 'STO_K', "D", '20d-50d','momentum','capm']).sort_values(ascending=False)
 
 #Matrice de confusion 
 
