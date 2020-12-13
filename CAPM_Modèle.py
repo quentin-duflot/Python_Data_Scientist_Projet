@@ -56,24 +56,28 @@ def tab_capm(df,start, end, N):
     """retourne un tableau avec le capm calculé à partir du jour Start + Njours
 
     """
+    
     d = pd.Timedelta('1 day')
-    if start == end :
-        return []
+    if start +70*d == end  :  
+        l=[]
+        for i in range(71):   #on complète les jours ouvrés où capm n'est pas défini par des 0
+          try :
+            s = df.loc[str(start+i*d)]
+            l.append(0)
+          except KeyError :
+            pass
+ 
+        return l
     else : 
         try :
-            return capm(df, cac40, start , start + N*d) + tab_capm(df,start+d,end,N)
-        except KeyError : 
-            pass
-        
-        return tab_capm(df,start+d,end,N)
+            s = df.loc[str(end)] #test si jours ouvré ou non : pas de valeur un jour non ouvré
+            return ( tab_capm(df,start,end - d,N) + [capm(df, cac40, max(end - N*d, start) ,end)[1]])
+        except KeyError :
+          pass
 
+        return tab_capm(df,start,end-d,N)
     
-    
-    
-    
-    
-    
-   
+
    
    
   
